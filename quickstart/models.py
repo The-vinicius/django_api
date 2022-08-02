@@ -8,8 +8,13 @@ class Aluno(models.Model):
     )
     nome = models.CharField(max_length=255)
     serie = models.CharField(max_length=2, choices=Choice_serie, default='Y1')
+    def __str__(self):
+        return self.nome
 
 
 class Escola(models.Model):
     alunos = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     nome = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nome
