@@ -5,7 +5,7 @@ from .models import Aluno, Escola
 class AlunoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Aluno
-        fields = ('nome', 'serie')
+        fields = ('id', 'nome', 'serie')
 
 
 class EscolaSerializer(serializers.ModelSerializer):
