@@ -4,8 +4,14 @@ from rest_framework.decorators import api_view
 from quickstart.serializers import AlunoSerializer, EscolaSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.http import JsonResponse
+from django.core import serializers
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 class CreateEscola(APIView):
     serializer_class = EscolaSerializer
@@ -71,3 +77,22 @@ def hello_world(request):
             serializer = AlunoSerializer(alunos, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+def hello_cache(request):
+    if 'alunos' in cache:
+        # get results from cache
+        alunos = cache.get('alunos')
+        print(alunos)
+        return JsonResponse(alunos, safe=False)
+ 
+    else:
+        alunos  = Aluno.objects.all()
+        results = serializers.serialize('json', alunos)
+        print(results)
+        # store data in cache
+        cache.set('alunos', results, timeout=CACHE_TTL)
+        return JsonResponse(results, safe=False)
+
+def sample(request):
+    objs = Aluno.objects.all()
+    json = serializers.serialize('json', objs)
+    return JsonResponse(json, safe=False)
