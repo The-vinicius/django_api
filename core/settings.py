@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quickstart', 
+    # 3rd apps
     'rest_framework',
+    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,14 @@ REST_FRAMEWORK = {
     'rest_framework.permissions.AllowAny',
     ]
 }
+
+# redis cache
+CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis:127.0.0.1:6379",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            },
+        }
+    }
